@@ -290,17 +290,17 @@ const DAYS = [
   },
   // ===== PHASE 2: EXPLORE FROM BRUM (Apr 13-16) =====
   {
-    day: 5, date: "Mon 13 Apr", weekday: "Monday", location: "Liverpool (day trip)", locClass: "liver", lodging: "Rohan's",
+    day: 5, date: "Mon 13 Apr", weekday: "Monday", location: "Manchester (day trip)", locClass: "manc", lodging: "Rohan's",
     activities: [
-      { time: "9:00am", icon: "\uD83D\uDE86", name: "Train Birmingham > Liverpool", note: "~1h 45m. Get there by 11am", dur: "1h 45m", cost: "\u00A320" },
-      { time: "11:00am", icon: "\uD83C\uDFB5", name: "The Beatles Story - official museum", note: "Albert Dock. Definitive Beatles exhibition, audio guide included", dur: "2h", cost: "\u00A320" },
-      { time: "1:15pm", icon: "\uD83C\uDFB6", name: "Cavern Club", note: "Most famous music venue in the world. Live music most afternoons", dur: "45m", cost: "\u00A35" },
-      { time: "2:15pm", icon: "\uD83C\uDF54", name: "Lunch - Bold Street or Liverpool One", note: "Bold Street = independent restaurants, Liverpool One = waterfront complex", dur: "1h", cost: "\u00A320" },
-      { time: "3:30pm", icon: "\uD83C\uDFDB", name: "Albert Dock + Tate Liverpool (free)", note: "Largest collection of Grade I listed buildings in UK", dur: "1h 30m", cost: "\u00A30" },
-      { time: "5:15pm", icon: "\u2693", name: "Merseyside Maritime Museum (free)", note: "Titanic & Lusitania exhibitions are excellent", dur: "1h", cost: "\u00A30" },
-      { time: "6:30pm", icon: "\u26F4", name: "Ferry 'cross the Mersey", note: "Iconic. Liver Building views from the water. Best near sunset", dur: "30m", cost: "\u00A310" },
-      { time: "7:30pm", icon: "\uD83C\uDF7D", name: "Dinner - The Art School Restaurant", note: "Liverpool's finest. Michelin recommended. Book ahead", dur: "2h", cost: "\u00A375" },
-      { time: "10:00pm", icon: "\uD83D\uDE86", name: "Train Liverpool > Birmingham", note: "", dur: "1h 45m", cost: "\u00A320" },
+      { time: "9:00am", icon: "\uD83D\uDE86", name: "Train Birmingham > Manchester Piccadilly", note: "~1h 45m", dur: "1h 45m", cost: "\u00A320" },
+      { time: "11:00am", icon: "\u26BD", name: "Old Trafford Stadium Tour (Man Utd)", note: "Theatre of Dreams. Dressing rooms, tunnel, pitch-side. Book ahead", dur: "2h", cost: "\u00A330" },
+      { time: "1:15pm", icon: "\uD83D\uDE8A", name: "Tram to Northern Quarter", note: "Manchester's coolest neighbourhood", dur: "20m", cost: "\u00A35" },
+      { time: "1:45pm", icon: "\uD83C\uDF54", name: "Lunch in Northern Quarter", note: "Craft beer + street food. Tons of indie spots", dur: "1h", cost: "\u00A320" },
+      { time: "3:00pm", icon: "\uD83C\uDFED", name: "Science and Industry Museum (free)", note: "World's first passenger railway station. Huge and fascinating", dur: "1h 30m", cost: "\u00A30" },
+      { time: "5:00pm", icon: "\uD83D\uDEB6", name: "Manchester city walk - Albert Sq, Cathedral, Printworks", note: "Get the feel of the city centre", dur: "1h", cost: "\u00A30" },
+      { time: "6:30pm", icon: "\uD83C\uDF7D", name: "Mackie Mayor - Victorian food hall", note: "Stunning restored building. 10+ food traders under one roof", dur: "1h 30m", cost: "\u00A330" },
+      { time: "8:30pm", icon: "\uD83C\uDF7A", name: "Drinks in Northern Quarter or Deansgate", note: "NQ for indie bars, Deansgate for bigger night out", dur: "1h", cost: "\u00A320" },
+      { time: "10:00pm", icon: "\uD83D\uDE86", name: "Train Manchester > Birmingham", note: "", dur: "1h 45m", cost: "\u00A320" },
     ]
   },
   {
@@ -396,18 +396,19 @@ const DAYS = [
     ]
   },
   {
-    day: 13, date: "Tue 21 Apr", weekday: "Tuesday", location: "Manchester (day trip)", locClass: "manc", lodging: "Rohan's",
+    day: 13, date: "Tue 21 Apr", weekday: "Tuesday", location: "Liverpool (day trip)", locClass: "liver", lodging: "Rohan's",
     activities: [
       { time: "8:00am", icon: "\uD83D\uDE86", name: "Train Oxford > Birmingham New Street", note: "~1h. Drop bag at Rohan's", dur: "1h", cost: "\u00A315" },
-      { time: "9:30am", icon: "\uD83D\uDE86", name: "Train Birmingham > Manchester Piccadilly", note: "~1h 45m", dur: "1h 45m", cost: "\u00A320" },
-      { time: "11:30am", icon: "\u26BD", name: "Old Trafford Stadium Tour (Man Utd)", note: "Theatre of Dreams. Dressing rooms, tunnel, pitch-side. Book ahead", dur: "2h", cost: "\u00A330" },
-      { time: "1:45pm", icon: "\uD83D\uDE8A", name: "Tram to Northern Quarter", note: "Manchester's coolest neighbourhood", dur: "20m", cost: "\u00A35" },
-      { time: "2:15pm", icon: "\uD83C\uDF54", name: "Lunch in Northern Quarter", note: "Craft beer + street food. Tons of indie spots", dur: "1h", cost: "\u00A320" },
-      { time: "3:30pm", icon: "\uD83C\uDFED", name: "Science and Industry Museum (free)", note: "World's first passenger railway station. Huge and fascinating", dur: "1h 30m", cost: "\u00A30" },
-      { time: "5:30pm", icon: "\uD83D\uDEB6", name: "Manchester city walk - Albert Sq, Cathedral, Printworks", note: "Get the feel of the city centre", dur: "1h", cost: "\u00A30" },
-      { time: "7:00pm", icon: "\uD83C\uDF7D", name: "Mackie Mayor - Victorian food hall", note: "Stunning restored building. 10+ food traders under one roof", dur: "1h 30m", cost: "\u00A330" },
-      { time: "8:45pm", icon: "\uD83D\uDE86", name: "Train Manchester > Birmingham", note: "~1h 45m. Back to Rohan's for the night", dur: "1h 45m", cost: "\u00A320" },
-      { time: "10:30pm", icon: "\uD83C\uDF7A", name: "Nightcap with Rohan", note: "One more Brum night - bonus hangout you wouldn't have gotten otherwise", dur: "", cost: "" },
+      { time: "9:30am", icon: "\uD83D\uDE86", name: "Train Birmingham > Liverpool", note: "~1h 45m", dur: "1h 45m", cost: "\u00A320" },
+      { time: "11:30am", icon: "\uD83C\uDFB5", name: "The Beatles Story - official museum", note: "Albert Dock. Definitive Beatles exhibition, audio guide included", dur: "2h", cost: "\u00A320" },
+      { time: "1:45pm", icon: "\uD83C\uDFB6", name: "Cavern Club", note: "Most famous music venue in the world. Live music most afternoons", dur: "45m", cost: "\u00A35" },
+      { time: "2:45pm", icon: "\uD83C\uDF54", name: "Lunch - Bold Street or Liverpool One", note: "Bold Street = independent restaurants, Liverpool One = waterfront complex", dur: "1h", cost: "\u00A320" },
+      { time: "4:00pm", icon: "\uD83C\uDFDB", name: "Albert Dock + Tate Liverpool (free)", note: "Largest collection of Grade I listed buildings in UK", dur: "1h 30m", cost: "\u00A30" },
+      { time: "5:45pm", icon: "\u2693", name: "Merseyside Maritime Museum (free)", note: "Titanic & Lusitania exhibitions are excellent", dur: "1h", cost: "\u00A30" },
+      { time: "7:00pm", icon: "\u26F4", name: "Ferry 'cross the Mersey", note: "Iconic. Liver Building views from the water. Best near sunset", dur: "30m", cost: "\u00A310" },
+      { time: "7:45pm", icon: "\uD83C\uDF7D", name: "Dinner - The Art School Restaurant", note: "Liverpool's finest. Michelin recommended. Book ahead", dur: "2h", cost: "\u00A375" },
+      { time: "10:00pm", icon: "\uD83D\uDE86", name: "Train Liverpool > Birmingham", note: "Back to Rohan's for the night", dur: "1h 45m", cost: "\u00A320" },
+      { time: "11:45pm", icon: "\uD83C\uDF7A", name: "Nightcap with Rohan", note: "One more Brum night - bonus hangout", dur: "", cost: "" },
     ]
   },
   {
@@ -474,7 +475,7 @@ const BOOKINGS = [
 
   // ATTRACTIONS (book ahead)
   { id: "b9", cat: "Attractions", item: "Cadbury World, Birmingham (if doing it)", day: "Days 2-4", urgency: "orange", booked: false },
-  { id: "b11", cat: "Attractions", item: "Old Trafford Stadium Tour, Manchester", day: "Day 13", urgency: "orange", booked: false },
+  { id: "b11", cat: "Attractions", item: "Old Trafford Stadium Tour, Manchester", day: "Day 5", urgency: "orange", booked: false },
   { id: "b32", cat: "Attractions", item: "Edinburgh Castle", day: "Day 6", urgency: "orange", booked: false },
   { id: "b12", cat: "Attractions", item: "Tower of London", day: "Day 9", urgency: "orange", booked: false },
   { id: "b13", cat: "Attractions", item: "London Eye", day: "Day 9", urgency: "orange", booked: false },
@@ -483,7 +484,7 @@ const BOOKINGS = [
 
   // RESTAURANTS (book ahead)
   { id: "b19", cat: "Restaurants", item: "Carters of Moseley, Birmingham (2 Michelin stars)", day: "Day 8", urgency: "red", booked: false },
-  { id: "b20", cat: "Restaurants", item: "The Art School Restaurant, Liverpool", day: "Day 5", urgency: "orange", booked: false },
+  { id: "b20", cat: "Restaurants", item: "The Art School Restaurant, Liverpool", day: "Day 13", urgency: "orange", booked: false },
   { id: "b33", cat: "Restaurants", item: "The Witchery by the Castle, Edinburgh", day: "Day 6", urgency: "orange", booked: false },
   { id: "b21", cat: "Restaurants", item: "Dishoom Covent Garden", day: "Day 10", urgency: "orange", booked: false },
 
