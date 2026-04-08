@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UK Trip — April 2026</title>
+<style>
+  :root {
+    --bham: #4A90D9; --bham-bg: #EBF2FC;
+    --liver: #E67E22; --liver-bg: #FDF2E9;
+    --manc: #9B59B6; --manc-bg: #F4ECF7;
+    --london: #E74C3C; --london-bg: #FDEDEC;
+    --tenerife: #27AE60; --tenerife-bg: #EAFAF1;
+    --edin: #1ABC9C; --edin-bg: #E8F8F5;
+    --oxford: #F39C12; --oxford-bg: #FEF5E7;
+    --maryland: #8D6E63; --maryland-bg: #F5F0ED;
+    --transit: #95A5A6; --transit-bg: #F2F3F4;
+    --bg: #0F1117; --surface: #1A1D27; --surface2: #242836;
+    --text: #E8E9ED; --text2: #9DA3B4; --border: #2E3344;
+    --accent: #6C8EEF;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+
+  /* NAV */
+  .nav { position: sticky; top:0; z-index:100; background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 16px; }
+  .nav h1 { font-size: 18px; font-weight: 600; white-space: nowrap; }
+  .nav-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+  .nav-tab { padding: 6px 14px; border-radius: 6px; font-size: 13px; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--text2); transition: all .15s; }
+  .nav-tab:hover { background: var(--surface2); color: var(--text); }
+  .nav-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* LAYOUT */
+  .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* OVERVIEW */
+  .trip-header { text-align: center; padding: 24px 0 16px; }
+  .trip-header h2 { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+  .trip-header .route { color: var(--text2); font-size: 14px; }
+  .trip-stats { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: 16px 0 24px; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 20px; text-align: center; min-width: 100px; }
+  .stat .num { font-size: 24px; font-weight: 700; color: var(--accent); }
+  .stat .label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: .5px; }
+
+  /* DAY CARDS */
+  .day-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 16px; overflow: hidden; }
+  .day-header { padding: 14px 20px; display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
+  .day-header:hover { background: var(--surface2); }
+  .day-num { font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 5px; color: #fff; min-width: 52px; text-align: center; }
+  .day-info { flex: 1; }
+  .day-date { font-weight: 600; font-size: 15px; }
+  .day-location { color: var(--text2); font-size: 13px; }
+  .day-lodging { font-size: 12px; color: var(--text2); background: var(--surface2); padding: 3px 10px; border-radius: 4px; }
+  .day-toggle { color: var(--text2); font-size: 18px; transition: transform .2s; }
+  .day-card.open .day-toggle { transform: rotate(180deg); }
+  .day-body { display: none; padding: 0 20px 16px; }
+  .day-card.open .day-body { display: block; }
+
+  /* ACTIVITIES */
+  .activity { display: grid; grid-template-columns: 70px 28px 1fr 70px 50px; gap: 8px; align-items: start; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .activity:last-child { border-bottom: none; }
+  .act-time { color: var(--text2); font-weight: 500; font-size: 12px; }
+  .act-icon { font-size: 15px; text-align: center; }
+  .act-desc { }
+  .act-desc strong { font-weight: 600; }
+  .act-desc .note { color: var(--text2); font-size: 12px; display: block; margin-top: 2px; }
+  .act-dur { color: var(--text2); font-size: 12px; text-align: right; }
+  .act-cost { color: var(--accent); font-size: 12px; text-align: right; font-weight: 600; }
+
+  /* BOOKING CHECKLIST */
+  .checklist-section { margin-bottom: 24px; }
+  .checklist-section h3 { font-size: 15px; font-weight: 600; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .check-item { display: grid; grid-template-columns: 32px 1fr 100px 90px; gap: 8px; align-items: center; padding: 10px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 6px; font-size: 13px; }
+  .check-item input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
+  .check-item.done { opacity: .5; }
+  .check-item .urgency { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; text-align: center; }
+  .urgency.red { background: #E74C3C22; color: #E74C3C; }
+  .urgency.orange { background: #E67E2222; color: #E67E22; }
+  .urgency.green { background: #27AE6022; color: #27AE60; }
+  .urgency.done { background: #27AE6022; color: #27AE60; }
+  .check-item .day-tag { font-size: 11px; color: var(--text2); }
+
+  /* QUICK REF */
+  .ref-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 700px) { .ref-grid { grid-template-columns: 1fr; } }
+  .ref-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .ref-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+  .ref-card ul { list-style: none; font-size: 13px; }
+  .ref-card li { padding: 4px 0; border-bottom: 1px solid var(--border); }
+  .ref-card li:last-child { border: none; }
+  .ref-card li span { color: var(--text2); }
+
+  /* COLOR CODING */
+  .loc-bham { background: var(--bham); } .loc-liver { background: var(--liver); }
+  .loc-manc { background: var(--manc); } .loc-london { background: var(--london); }
+  .loc-edin { background: var(--edin); } .loc-oxford { background: var(--oxford); }
+  .loc-tenerife { background: var(--tenerife); } .loc-maryland { background: var(--maryland); }
+  .loc-transit { background: var(--transit); }
+
+  /* MOBILE */
+  @media (max-width: 600px) {
+    .activity { grid-template-columns: 55px 24px 1fr; }
+    .act-dur, .act-cost { display: none; }
+    .nav { flex-wrap: wrap; padding: 10px 12px; }
+    .container { padding: 12px; }
+  }
+
+  /* PRINT */
+  @media print {
+    body { background: #fff; color: #111; }
+    .nav { position: static; background: #fff; border: none; }
+    .nav-tab { display: none; }
+    .day-card { break-inside: avoid; }
+    .day-body { display: block !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <h1>UK Trip Apr 2026</h1>
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-view="overview">Overview</button>
+    <button class="nav-tab" data-view="itinerary">Day-by-Day</button>
+    <button class="nav-tab" data-view="booking">Booking Checklist</button>
+    <button class="nav-tab" data-view="packing">Packing List</button>
+    <button class="nav-tab" data-view="quickref">Quick Reference</button>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- OVERVIEW -->
+<div class="view active" id="overview">
+  <div class="trip-header">
+    <h2>April 8 - 26, 2026</h2>
+    <div class="route">Los Angeles &rarr; Birmingham &rarr; Liverpool &rarr; Edinburgh &rarr; London &rarr; Oxford &rarr; Maryland &rarr; Miami</div>
+  </div>
+  <div class="trip-stats">
+    <div class="stat"><div class="num">20</div><div class="label">Days</div></div>
+    <div class="stat"><div class="num">7</div><div class="label">Cities</div></div>
+    <div class="stat"><div class="num">1</div><div class="label">Match</div></div>
+    <div class="stat"><div class="num" id="booked-count">4</div><div class="label">Booked</div></div>
+    <div class="stat"><div class="num" id="todo-count">18</div><div class="label">To Book</div></div>
+  </div>
+
+  <div id="overview-cards"></div>
+</div>
+
+<!-- DAY BY DAY -->
+<div class="view" id="itinerary">
+  <div class="trip-header">
+    <h2>Day-by-Day Itinerary</h2>
+  </div>
+  <div id="day-cards"></div>
+</div>
+
+<!-- BOOKING -->
+<div class="view" id="booking">
+  <div class="trip-header">
+    <h2>Booking Checklist</h2>
+    <div class="route">Check items off as you book. Progress saves locally.</div>
+  </div>
+  <div id="booking-list"></div>
+</div>
+
+<!-- PACKING LIST -->
+<div class="view" id="packing">
+  <div class="trip-header">
+    <h2>Packing List</h2>
+    <div class="route">20 days. UK mid-April (8-15&deg;C / 45-60&deg;F, expect rain). Wedding. Michelin dinner. Miami heat at the end. Check items off as you pack.</div>
+  </div>
+  <div id="packing-list"></div>
+</div>
+
+<!-- QUICK REF -->
+<div class="view" id="quickref">
+  <div class="trip-header">
+    <h2>Quick Reference</h2>
+  </div>
+  <div class="ref-grid">
+    <div class="ref-card">
+      <h3>Flights</h3>
+      <ul>
+        <li><strong>Apr 8</strong> LAX &rarr; LHR &mdash; Virgin Atlantic 8:35pm <span>(DL5925) BOOKED</span></li>
+        <li><strong>Apr 23</strong> London &rarr; DC area &mdash; TBD <span>(NEED TO BOOK - use BWI&gt;LAX credit)</span></li>
+        <li><strong>Apr 26</strong> BWI &rarr; LAX &mdash; <span>CANCEL - apply credit to UK&gt;DC flight</span></li>
+        <li><strong>Apr 27</strong> BWI &rarr; MIA &mdash; <span>Work trip (Riverside covers)</span></li>
+      </ul>
+    </div>
+    <div class="ref-card">
+      <h3>Lodging</h3>
+      <ul>
+        <li><strong>Apr 9-16</strong> Birmingham &mdash; Rohan's place</li>
+        <li><strong>Apr 17-19</strong> London &mdash; Westin London City (Fri-Sun)</li>
+        <li><strong>Apr 19-23</strong> Oxford &mdash; Dad's place</li>
+        <li><strong>Apr 23-26</strong> Maryland &mdash; GCL/GMA</li>
+      </ul>
+    </div>
+    <div class="ref-card">
+      <h3>Football</h3>
+      <ul>
+        <li><strong>Apr 18 (Sat)</strong> Brighton @ Tottenham &mdash; Spurs Stadium <span>BOOKED</span></li>
+      </ul>
+    </div>
+    <div class="ref-card">
+      <h3>Key People</h3>
+      <ul>
+        <li><strong>Rohan</strong> &mdash; Birmingham host (Days 1-8)</li>
+        <li><strong>Dad</strong> &mdash; Oxford host (Days 11-15, Sun-Thu)</li>
+        <li><strong>Evan</strong> &mdash; Arrives London ~10am Apr 17</li>
+        <li><strong>Apr 25</strong> &mdash; Sarah's Wedding (Maryland)</li>
+      </ul>
+    </div>
+    <div class="ref-card">
+      <h3>Transit Times</h3>
+      <ul>
+        <li><strong>Brum &rarr; Liverpool</strong> &mdash; 1h 45m train (~&pound;20)</li>
+        <li><strong>Brum &rarr; Edinburgh</strong> &mdash; 4h 15m train (~&pound;40-70)</li>
+        <li><strong>Oxford &rarr; Cotswolds</strong> &mdash; 30-45 min drive</li>
+        <li><strong>Oxford &rarr; Bath</strong> &mdash; 1h 15m train (~&pound;20)</li>
+        <li><strong>Oxford &rarr; Blenheim</strong> &mdash; 20 min drive/bus</li>
+        <li><strong>Oxford &rarr; Stonehenge</strong> &mdash; 1h 30m drive</li>
+        <li><strong>Oxford &rarr; Heathrow</strong> &mdash; 1h 15m bus (The Airline)</li>
+      </ul>
+    </div>
+    <div class="ref-card">
+      <h3>Trip Phases</h3>
+      <ul>
+        <li><strong>Phase 1 (Apr 9-12)</strong> &mdash; Chill in Brum with Rohan. Go with the flow</li>
+        <li><strong>Phase 2 (Apr 13-16)</strong> &mdash; Liverpool day trip, Edinburgh overnight (2 nights), farewell Brum</li>
+        <li><strong>Phase 3 (Apr 17-18)</strong> &mdash; London tourist highlights + Spurs match with Dad</li>
+        <li><strong>Phase 4 (Apr 19-22)</strong> &mdash; Oxford base with Dad: colleges, Cotswolds, Bath</li>
+        <li><strong>Phase 5 (Apr 23-27)</strong> &mdash; Fly to Maryland, wedding, then Miami work trip</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+const DAYS = [
+  {
+    day: 0, date: "Wed 8 Apr", weekday: "Wednesday", location: "Los Angeles", locClass: "transit", lodging: "Home",
+    activities: [
+      { time: "Daytime", icon: "\uD83D\uDCBC", name: "Work from home", note: "", dur: "", cost: "" },
+      { time: "Afternoon", icon: "\uD83E\uDDF3", name: "Prep & pack for trip", note: "", dur: "", cost: "" },
+      { time: "8:35pm", icon: "\u2708", name: "Depart LAX - Virgin Atlantic (overnight)", note: "Flight DL5925, Terminal 3", dur: "10h 25m", cost: "$700" },
+    ]
+  },
+  {
+    day: 1, date: "Thu 9 Apr", weekday: "Thursday", location: "Transit > Birmingham", locClass: "transit", lodging: "Rohan's",
+    activities: [
+      { time: "~3:00pm", icon: "\u2708", name: "Land at London Heathrow (LHR) T3", note: "Border control", dur: "", cost: "" },
+      { time: "3:50pm", icon: "\uD83D\uDE8C", name: "National Express coach LHR > Birmingham", note: "Heathrow Central Bus Station to Digbeth", dur: "2h 45m", cost: "\u00A326" },
+      { time: "~6:30pm", icon: "\uD83C\uDFE0", name: "Arrive Birmingham, settle in at Rohan's", note: "First night - take it easy, jet lag recovery", dur: "", cost: "" },
+    ]
+  },
+  // ===== PHASE 1: CHILL IN BRUM WITH ROHAN (Apr 10-12) =====
+  {
+    day: 2, date: "Fri 10 Apr", weekday: "Friday", location: "Birmingham w/ Rohan", locClass: "bham", lodging: "Rohan's",
+    activities: [
+      { time: "", icon: "\uD83C\uDF1F", name: "Go with the flow - Rohan's call", note: "First full day in England. See his life, his spots, his city. No rigid plans.", dur: "", cost: "" },
+      { time: "", icon: "\uD83D\uDCA1", name: "If you want ideas: Digbeth street art + Original Patty Men (smash burgers)", note: "Digbeth is Brum's creative quarter - street art, indie shops, great food", dur: "", cost: "" },
+      { time: "", icon: "\uD83D\uDCA1", name: "If you want ideas: Gas Street Basin canal walk at dusk", note: "Heart of the UK canal network - beautiful evening stroll", dur: "", cost: "" },
+      { time: "", icon: "\uD83D\uDCA1", name: "If you want ideas: Balti Triangle for dinner (Al-Frash)", note: "Birmingham literally invented the Balti dish - must try at some point", dur: "", cost: "" },
+      { time: "", icon: "\uD83C\uDF7B", name: "If you want ideas: Broad Street for drinks/nightlife", note: "Brum's main entertainment strip - buzzing on a Friday night", dur: "", cost: "" },
+    ]
+  },
+  {
+    day: 3, date: "Sat 11 Apr", weekday: "Saturday", location: "Birmingham w/ Rohan", locClass: "bham", lodging: "Rohan's",
+    activities: [
+      { time: "", icon: "\uD83C\uDF1F", name: "Rohan's Saturday - whatever he'd normally do", note: "See what a weekend in Brum is actually like. Pubs, football on TV, mates, etc.", dur: "", cost: "" },
+      { time: "", icon: "\uD83D\uDCA1", name: "If you want ideas: Cadbury World & Bournville village", note: "Chocolate factory + museum. Fun and unique. Must book ahead - sells out", dur: "2h 30m", cost: "\u00A322" },
+      { time: "", icon: "\uD83D\uDCA1", name: "If you want ideas: Bullring & Selfridges + Birmingham Museum (free)", note: "Iconic bubble-wrap building. Museum has best Pre-Raphaelite art outside London", dur: "", cost: "" },
+      { time: "", icon: "\uD83D\uDCA1", name: "If you want ideas: Saturday night out in Brum", note: "Jewellery Quarter cocktail bars, Digbeth clubs, or Broad Street", dur: "", cost: "" },
+    ]
+  },
+  {
+    day: 4, date: "Sun 12 Apr", weekday: "Sunday", location: "Birmingham w/ Rohan", locClass: "bham", lodging: "Rohan's",
+    activities: [
+      { time: "", icon: "\uD83C\uDF1F", name: "Sunday vibes with Rohan", note: "Classic Sunday: fry-up, walk, pub lunch, football on TV", dur: "", cost: "" },
+      { time: "", icon: "\uD83D\uDCA1", name: "If you want ideas: Full English at a local caff", note: "The most important British cultural experience", dur: "45m", cost: "\u00A38" },
+      { time: "", icon: "\uD83D\uDCA1", name: "If you want ideas: Black Country Living Museum", note: "Open-air industrial heritage. Costumed staff, tram rides, fish & chips. ~30 min drive", dur: "3h", cost: "\u00A322" },
+      { time: "", icon: "\uD83D\uDCA1", name: "If you want ideas: Sunday roast at a proper pub", note: "Ask Rohan for his favorite - this is peak British culture", dur: "", cost: "" },
+    ]
+  },
+  // ===== PHASE 2: EXPLORE FROM BRUM (Apr 13-16) =====
+  {
+    day: 5, date: "Mon 13 Apr", weekday: "Monday", location: "Liverpool (day trip)", locClass: "liver", lodging: "Rohan's",
+    activities: [
+      { time: "9:00am", icon: "\uD83D\uDE86", name: "Train Birmingham > Liverpool", note: "~1h 45m. Get there by 11am", dur: "1h 45m", cost: "\u00A320" },
+      { time: "11:00am", icon: "\uD83C\uDFB5", name: "The Beatles Story - official museum", note: "Albert Dock. Definitive Beatles exhibition, audio guide included", dur: "2h", cost: "\u00A320" },
+      { time: "1:15pm", icon: "\uD83C\uDFB6", name: "Cavern Club", note: "Most famous music venue in the world. Live music most afternoons", dur: "45m", cost: "\u00A35" },
+      { time: "2:15pm", icon: "\uD83C\uDF54", name: "Lunch - Bold Street or Liverpool One", note: "Bold Street = independent restaurants, Liverpool One = waterfront complex", dur: "1h", cost: "\u00A320" },
+      { time: "3:30pm", icon: "\uD83C\uDFDB", name: "Albert Dock + Tate Liverpool (free)", note: "Largest collection of Grade I listed buildings in UK", dur: "1h 30m", cost: "\u00A30" },
+      { time: "5:15pm", icon: "\u2693", name: "Merseyside Maritime Museum (free)", note: "Titanic & Lusitania exhibitions are excellent", dur: "1h", cost: "\u00A30" },
+      { time: "6:30pm", icon: "\u26F4", name: "Ferry 'cross the Mersey", note: "Iconic. Liver Building views from the water. Best near sunset", dur: "30m", cost: "\u00A310" },
+      { time: "7:30pm", icon: "\uD83C\uDF7D", name: "Dinner - The Art School Restaurant", note: "Liverpool's finest. Michelin recommended. Book ahead", dur: "2h", cost: "\u00A375" },
+      { time: "10:00pm", icon: "\uD83D\uDE86", name: "Train Liverpool > Birmingham", note: "", dur: "1h 45m", cost: "\u00A320" },
+    ]
+  },
+  {
+    day: 6, date: "Tue 14 Apr", weekday: "Tuesday", location: "Brum > Edinburgh", locClass: "edin", lodging: "Edinburgh hotel",
+    activities: [
+      { time: "8:00am", icon: "\uD83D\uDE86", name: "Train Birmingham > Edinburgh Waverley", note: "CrossCountry or Avanti. ~4h 15m. Book in advance for best price", dur: "4h 15m", cost: "\u00A340-70" },
+      { time: "12:30pm", icon: "\uD83C\uDFE8", name: "Check in / drop bags at hotel", note: "Royal Mile or Old Town area. Book a 2-night stay", dur: "30m", cost: "" },
+      { time: "1:00pm", icon: "\uD83C\uDF7D", name: "Lunch on the Royal Mile", note: "Plenty of pubs and cafes. Try a Scottish meat pie or cullen skink (smoked haddock soup)", dur: "1h", cost: "\u00A315" },
+      { time: "2:30pm", icon: "\uD83C\uDFF0", name: "Edinburgh Castle (interior tour)", note: "Perched on a volcanic rock. Crown Jewels, Stone of Destiny, stunning city views", dur: "2h", cost: "\u00A320" },
+      { time: "5:00pm", icon: "\uD83D\uDEB6", name: "Walk the Royal Mile - Castle to Holyrood", note: "Heart of Old Town. Closes, wynds, medieval tenements. Stop at St Giles' Cathedral (free)", dur: "1h 30m", cost: "\u00A30" },
+      { time: "7:00pm", icon: "\uD83E\uDD43", name: "Scotch whisky tasting", note: "The Scotch Whisky Experience (Royal Mile) or a proper whisky bar like The Bow Bar", dur: "1h 30m", cost: "\u00A325" },
+      { time: "9:00pm", icon: "\uD83C\uDF7D", name: "Dinner - The Witchery by the Castle", note: "Edinburgh's most atmospheric restaurant. Right at the Castle gates. Book ahead", dur: "2h", cost: "\u00A360" },
+    ]
+  },
+  {
+    day: 7, date: "Wed 15 Apr", weekday: "Wednesday", location: "Edinburgh (full day)", locClass: "edin", lodging: "Edinburgh hotel",
+    activities: [
+      { time: "8:00am", icon: "\uD83E\uDD7E", name: "Arthur's Seat hike - extinct volcano", note: "251m summit right in the city. 45 min up, best views of Edinburgh. Go early for sunrise crowd-free", dur: "1h 45m", cost: "\u00A30" },
+      { time: "10:00am", icon: "\uD83C\uDF73", name: "Scottish breakfast at a local cafe", note: "Haggis, black pudding, tattie scone - the full Scottish", dur: "45m", cost: "\u00A312" },
+      { time: "11:00am", icon: "\uD83C\uDFF0", name: "Holyrood Palace - Queen's Scottish residence", note: "Mary Queen of Scots lived here. Stunning grounds + ruined abbey", dur: "1h 30m", cost: "\u00A320" },
+      { time: "1:00pm", icon: "\uD83C\uDFDB", name: "Scottish National Museum (free)", note: "Chambers Street. Everything from dinosaurs to Scottish history. Grand Victorian building", dur: "1h 30m", cost: "\u00A30" },
+      { time: "2:45pm", icon: "\uD83C\uDF7D", name: "Lunch - Victoria Street / Grassmarket", note: "Victoria Street = the street that inspired Diagon Alley. Grassmarket = pubs and character", dur: "1h", cost: "\u00A318" },
+      { time: "4:00pm", icon: "\uD83D\uDEB6", name: "Dean Village + Water of Leith walk", note: "Hidden gem. Picturesque former milling village 10 min from city centre. Feels like a fairy tale", dur: "1h", cost: "\u00A30" },
+      { time: "5:30pm", icon: "\uD83D\uDEB6", name: "New Town - Georgian architecture + Calton Hill views", note: "Calton Hill = mini Acropolis. Best panoramic views of the whole city. Quick 10 min climb", dur: "1h", cost: "\u00A30" },
+      { time: "7:00pm", icon: "\uD83C\uDF7A", name: "Grassmarket pub crawl", note: "Historic square with great pubs. The Last Drop, Greyfriars Bobby's Bar, White Hart Inn", dur: "1h 30m", cost: "\u00A325" },
+      { time: "9:00pm", icon: "\uD83C\uDF7D", name: "Dinner - Ondine (seafood) or Timberyard (tasting menu)", note: "Ondine = best seafood in Edinburgh. Timberyard = Michelin-starred, incredible tasting menu", dur: "2h", cost: "\u00A365" },
+    ]
+  },
+  {
+    day: 8, date: "Thu 16 Apr", weekday: "Thursday", location: "Edinburgh > Brum farewell", locClass: "bham", lodging: "Rohan's",
+    activities: [
+      { time: "9:00am", icon: "\uD83C\uDF73", name: "Last Edinburgh morning - Stockbridge neighbourhood", note: "Charming village feel within the city. Sunday-style market vibes, great coffee", dur: "1h", cost: "\u00A310" },
+      { time: "10:30am", icon: "\uD83D\uDE86", name: "Train Edinburgh > Birmingham", note: "~4h 15m. Scenic route through English countryside", dur: "4h 15m", cost: "\u00A340-70" },
+      { time: "3:00pm", icon: "\uD83C\uDFE0", name: "Arrive Brum, drop bags at Rohan's", note: "Quick rest before farewell evening", dur: "1h", cost: "" },
+      { time: "4:30pm", icon: "\uD83D\uDEB6", name: "Last Birmingham wander - catch anything you missed", note: "Jewellery Quarter, Back to Backs, Bullring, canal walk", dur: "2h", cost: "" },
+      { time: "7:00pm", icon: "\uD83C\uDF7D", name: "Farewell dinner - Carters of Moseley (2 Michelin stars)", note: "BOOK NOW - Birmingham's best restaurant. Worth the trip alone", dur: "2h 30m", cost: "\u00A3100+" },
+      { time: "9:30pm", icon: "\uD83C\uDF78", name: "Farewell drinks with Rohan - Mailbox rooftop bars", note: "Great views over the canal network at night", dur: "1h+", cost: "\u00A320" },
+    ]
+  },
+  // ===== PHASE 3: LONDON WITH DAD (Apr 17-18) =====
+  {
+    day: 9, date: "Fri 17 Apr", weekday: "Friday", location: "London w/ Dad", locClass: "london", lodging: "Westin London City",
+    activities: [
+      { time: "8:30am", icon: "\uD83C\uDF73", name: "Quick breakfast at Rohan's + goodbye", note: "", dur: "", cost: "" },
+      { time: "9:00am", icon: "\uD83D\uDE86", name: "Train Birmingham > London", note: "~2h 30m", dur: "2h 30m", cost: "\u00A330" },
+      { time: "11:30am", icon: "\uD83C\uDFE8", name: "Check in / drop bags - meet Dad (arrives ~10am)", note: "Westin London City", dur: "30m", cost: "" },
+      { time: "12:00pm", icon: "\uD83C\uDF5E", name: "Borough Market", note: "London's oldest food market (est. 1756). Go hungry", dur: "1h", cost: "\u00A320" },
+      { time: "1:30pm", icon: "\uD83C\uDF09", name: "Tower Bridge - walk across + glass floor", note: "Glass floor walkway is exhilarating", dur: "45m", cost: "\u00A315" },
+      { time: "2:30pm", icon: "\uD83C\uDFF0", name: "Tower of London - Crown Jewels + Yeoman tour", note: "Book online to skip queues. 1000 years of history", dur: "2h 30m", cost: "\u00A340" },
+      { time: "6:00pm", icon: "\uD83D\uDEB6", name: "South Bank walk", note: "Best riverside walk in London - Thames views, street performers", dur: "1h", cost: "\u00A30" },
+      { time: "8:00pm", icon: "\uD83C\uDFA1", name: "London Eye - 30 min rotation", note: "Book online. 25 mile views. Best at dusk", dur: "45m", cost: "\u00A330" },
+      { time: "9:00pm", icon: "\uD83D\uDD70", name: "Big Ben + Houses of Parliament", note: "Most photographed landmark in the UK - stunning lit up at night", dur: "30m", cost: "\u00A30" },
+    ]
+  },
+  {
+    day: 10, date: "Sat 18 Apr", weekday: "Saturday", location: "London + Spurs", locClass: "london", lodging: "Westin London City",
+    activities: [
+      { time: "8:00am", icon: "\uD83C\uDF33", name: "St James's Park", note: "Pelicans, lake views, gorgeous flower beds", dur: "45m", cost: "\u00A30" },
+      { time: "9:00am", icon: "\u26EA", name: "Westminster Abbey", note: "Coronation church since 1066", dur: "1h", cost: "\u00A340" },
+      { time: "10:00am", icon: "\uD83D\uDC51", name: "Buckingham Palace + Changing of the Guard", note: "Guard change at 11am - arrive early for a good spot", dur: "1h 30m", cost: "\u00A30" },
+      { time: "11:45am", icon: "\uD83D\uDECD", name: "Tottenham Store - Trafalgar Square", note: "", dur: "30m", cost: "\u00A350" },
+      { time: "12:15pm", icon: "\uD83D\uDE87", name: "Tube to White Hart Lane", note: "District line then Overground", dur: "50m", cost: "\u00A35" },
+      { time: "1:00pm", icon: "\uD83C\uDF7A", name: "Pre-match at The Bill Nicholson pub", note: "Spurs' most legendary matchday pub", dur: "1h", cost: "\u00A325" },
+      { time: "3:00pm", icon: "\u26BD", name: "Brighton vs Tottenham - Premier League", note: "BOOKED. Tottenham Hotspur Stadium", dur: "2h", cost: "\u00A3200" },
+      { time: "7:00pm", icon: "\uD83D\uDE87", name: "Tube back to West End", note: "", dur: "40m", cost: "\u00A35" },
+      { time: "8:00pm", icon: "\uD83C\uDFAD", name: "Covent Garden Piazza - street performers", note: "Always lively on Saturday evenings", dur: "45m", cost: "\u00A310" },
+      { time: "9:00pm", icon: "\uD83C\uDF5B", name: "Dishoom Covent Garden", note: "Bombay cafe-style. Black dal & house chai. Queue or book", dur: "1h 30m", cost: "\u00A340" },
+    ]
+  },
+  // ===== PHASE 4: OXFORD BASE WITH DAD (Apr 19-22) =====
+  {
+    day: 11, date: "Sun 19 Apr", weekday: "Sunday", location: "London > Oxford", locClass: "oxford", lodging: "Dad's (Oxford)",
+    activities: [
+      { time: "9:00am", icon: "\uD83C\uDFDB", name: "British Museum - Rosetta Stone, Elgin Marbles", note: "Free. One of the greatest museums in the world. Go early", dur: "2h 30m", cost: "\u00A30" },
+      { time: "11:45am", icon: "\uD83C\uDF5E", name: "Brunch near Bloomsbury", note: "", dur: "45m", cost: "\u00A320" },
+      { time: "1:00pm", icon: "\uD83C\uDFDB", name: "Tate Modern - Turbine Hall", note: "Free. Massive installation art in a converted power station", dur: "1h", cost: "\u00A30" },
+      { time: "2:30pm", icon: "\uD83D\uDEB6", name: "Quick South Bank / Carnaby Street browse", note: "Last London wander before heading to Oxford", dur: "1h", cost: "\u00A30" },
+      { time: "4:00pm", icon: "\uD83D\uDE86", name: "Train London Paddington > Oxford", note: "~1h. Check out of Westin first or leave bags", dur: "1h", cost: "\u00A315" },
+      { time: "5:30pm", icon: "\uD83C\uDFE0", name: "Arrive Oxford, settle in with Dad", note: "", dur: "", cost: "" },
+      { time: "7:00pm", icon: "\uD83C\uDF7D", name: "Dinner with Dad - The Eagle and Child", note: "Tolkien & C.S. Lewis's regular pub. Classic Oxford. Great Sunday roast", dur: "2h", cost: "\u00A335" },
+    ]
+  },
+  {
+    day: 12, date: "Mon 20 Apr", weekday: "Monday", location: "Oxford", locClass: "oxford", lodging: "Dad's (Oxford)",
+    activities: [
+      { time: "9:30am", icon: "\uD83C\uDFDB", name: "Christ Church College", note: "Harry Potter dining hall. Most famous Oxford college. Beautiful grounds", dur: "1h 30m", cost: "\u00A310" },
+      { time: "11:00am", icon: "\uD83C\uDFDB", name: "Radcliffe Camera + Bodleian Library", note: "Most photographed building in Oxford. Bodleian tour highly recommended", dur: "1h", cost: "\u00A310" },
+      { time: "12:30pm", icon: "\uD83C\uDF7D", name: "Lunch - Oxford Covered Market", note: "Historic covered market in the heart of the city. Great for grazing", dur: "1h", cost: "\u00A315" },
+      { time: "2:00pm", icon: "\uD83D\uDEB6", name: "Walk along River Cherwell + Oxford colleges", note: "Punting available if weather is good (very Oxford experience)", dur: "1h 30m", cost: "\u00A30" },
+      { time: "3:30pm", icon: "\uD83C\uDFDB", name: "Ashmolean Museum (free)", note: "World's first university museum. Excellent collection", dur: "1h 30m", cost: "\u00A30" },
+      { time: "5:30pm", icon: "\uD83C\uDF7A", name: "Pint at The Turf Tavern", note: "Hidden medieval pub. Bill Clinton 'didn't inhale' here. Atmospheric", dur: "1h", cost: "\u00A38" },
+      { time: "7:00pm", icon: "\uD83C\uDF7D", name: "Dinner - Ashmolean Dining Room or Oxford Kitchen", note: "Ashmolean = rooftop views. Oxford Kitchen = modern British. Both excellent", dur: "1h 30m", cost: "\u00A360" },
+    ]
+  },
+  {
+    day: 13, date: "Tue 21 Apr", weekday: "Tuesday", location: "Manchester (day trip)", locClass: "manc", lodging: "Rohan's",
+    activities: [
+      { time: "8:00am", icon: "\uD83D\uDE86", name: "Train Oxford > Birmingham New Street", note: "~1h. Drop bag at Rohan's", dur: "1h", cost: "\u00A315" },
+      { time: "9:30am", icon: "\uD83D\uDE86", name: "Train Birmingham > Manchester Piccadilly", note: "~1h 45m", dur: "1h 45m", cost: "\u00A320" },
+      { time: "11:30am", icon: "\u26BD", name: "Old Trafford Stadium Tour (Man Utd)", note: "Theatre of Dreams. Dressing rooms, tunnel, pitch-side. Book ahead", dur: "2h", cost: "\u00A330" },
+      { time: "1:45pm", icon: "\uD83D\uDE8A", name: "Tram to Northern Quarter", note: "Manchester's coolest neighbourhood", dur: "20m", cost: "\u00A35" },
+      { time: "2:15pm", icon: "\uD83C\uDF54", name: "Lunch in Northern Quarter", note: "Craft beer + street food. Tons of indie spots", dur: "1h", cost: "\u00A320" },
+      { time: "3:30pm", icon: "\uD83C\uDFED", name: "Science and Industry Museum (free)", note: "World's first passenger railway station. Huge and fascinating", dur: "1h 30m", cost: "\u00A30" },
+      { time: "5:30pm", icon: "\uD83D\uDEB6", name: "Manchester city walk - Albert Sq, Cathedral, Printworks", note: "Get the feel of the city centre", dur: "1h", cost: "\u00A30" },
+      { time: "7:00pm", icon: "\uD83C\uDF7D", name: "Mackie Mayor - Victorian food hall", note: "Stunning restored building. 10+ food traders under one roof", dur: "1h 30m", cost: "\u00A330" },
+      { time: "8:45pm", icon: "\uD83D\uDE86", name: "Train Manchester > Birmingham", note: "~1h 45m. Back to Rohan's for the night", dur: "1h 45m", cost: "\u00A320" },
+      { time: "10:30pm", icon: "\uD83C\uDF7A", name: "Nightcap with Rohan", note: "One more Brum night - bonus hangout you wouldn't have gotten otherwise", dur: "", cost: "" },
+    ]
+  },
+  {
+    day: 14, date: "Wed 22 Apr", weekday: "Wednesday", location: "Last full day (flex)", locClass: "oxford", lodging: "Dad's (Oxford)",
+    activities: [
+      { time: "Morning", icon: "\uD83D\uDE86", name: "Train Birmingham > Oxford", note: "~1h. Say bye to Rohan, head back to Dad's", dur: "1h", cost: "\u00A315" },
+      { time: "", icon: "\uD83D\uDD04", name: "FLEX DAY - last full day in England. Make it count", note: "Pick one below based on energy and what you're craving", dur: "", cost: "" },
+      { time: "", icon: "\u2B50", name: "Option A: Cotswolds (Recommended)", note: "30-45 min drive. Bourton-on-the-Water ('Venice of the Cotswolds'), Bibury (most photographed village in England), Stow-on-the-Wold. Quintessential English countryside. Best with a car - check if Dad can drive", dur: "Full day", cost: "\u00A330" },
+      { time: "", icon: "\uD83D\uDCA1", name: "Option B: Bath (1h 15m train from Oxford)", note: "UNESCO World Heritage city. Roman Baths, Royal Crescent, Thermae Bath Spa (rooftop hot spring pool). Stunning Georgian architecture", dur: "Full day", cost: "\u00A350" },
+      { time: "", icon: "\uD83D\uDCA1", name: "Option C: Blenheim Palace (20 min from Oxford)", note: "Churchill's birthplace. Massive Baroque palace + 2,000 acres of grounds. Easy half-day, leaves afternoon free", dur: "Half day", cost: "\u00A335" },
+      { time: "", icon: "\uD83D\uDCA1", name: "Option D: Chill Oxford day - punting, pubs, bookshops", note: "Blackwell's bookshop, covered market, river walk. Sometimes the best final day is unplanned", dur: "", cost: "" },
+      { time: "Evening", icon: "\uD83C\uDF7D", name: "Farewell England dinner with Dad", note: "Last supper on English soil. Somewhere memorable", dur: "2h", cost: "\u00A370" },
+    ]
+  },
+  // ===== PHASE 5: FLY HOME (Apr 23-26) =====
+  {
+    day: 15, date: "Thu 23 Apr", weekday: "Thursday", location: "Oxford > Maryland", locClass: "transit", lodging: "GCL/GMA",
+    activities: [
+      { time: "Morning", icon: "\uD83E\uDDF3", name: "Say goodbye to Dad, head to airport", note: "Oxford > Heathrow is ~1h 15m by bus (The Airline) or train via Reading", dur: "1h 30m", cost: "\u00A325" },
+      { time: "TBD", icon: "\u2708", name: "Fly London > DC area", note: "NEED TO BOOK - direct LHR to IAD/DCA/BWI. ~8h flight", dur: "~8h", cost: "TBD" },
+      { time: "Evening", icon: "\uD83C\uDFE0", name: "Arrive GCL/GMA - settle in", note: "", dur: "", cost: "" },
+    ]
+  },
+  {
+    day: 16, date: "Fri 24 Apr", weekday: "Friday", location: "Maryland", locClass: "maryland", lodging: "GCL/GMA",
+    activities: [
+      { time: "All Day", icon: "\uD83D\uDE0C", name: "Rest + family time", note: "Recover from travel", dur: "", cost: "" },
+    ]
+  },
+  {
+    day: 17, date: "Sat 25 Apr", weekday: "Saturday", location: "Maryland", locClass: "maryland", lodging: "GCL/GMA",
+    activities: [
+      { time: "Morning", icon: "\uD83D\uDC54", name: "Wedding morning prep", note: "", dur: "", cost: "" },
+      { time: "Afternoon", icon: "\uD83D\uDC92", name: "Sarah's Wedding ceremony & reception", note: "", dur: "", cost: "" },
+      { time: "Evening", icon: "\uD83C\uDF7E", name: "Wedding dinner + dancing", note: "", dur: "", cost: "" },
+    ]
+  },
+  {
+    day: 18, date: "Sun 26 Apr", weekday: "Sunday", location: "Maryland", locClass: "maryland", lodging: "GCL/GMA",
+    activities: [
+      { time: "Morning", icon: "\uD83E\uDD42", name: "Family farewell brunch", note: "", dur: "", cost: "" },
+      { time: "Afternoon", icon: "\uD83D\uDE0C", name: "Rest + prep for Miami work trip", note: "BWI > LAX flight cancelled/credit -- apply to UK > DC flight", dur: "", cost: "" },
+    ]
+  },
+  {
+    day: 19, date: "Mon 27 Apr", weekday: "Monday", location: "Maryland > Miami", locClass: "transit", lodging: "Work hotel",
+    activities: [
+      { time: "TBD", icon: "\u2708", name: "Fly BWI > MIA", note: "Work trip. Travel + flight covered by Riverside", dur: "", cost: "Work" },
+      { time: "", icon: "\uD83D\uDCBC", name: "Miami work trip (Mon-Wed)", note: "Through Wed Apr 30. Flight home to LAX covered by work", dur: "", cost: "" },
+    ]
+  },
+];
+
+const BOOKINGS = [
+  // FLIGHTS & TRANSPORT
+  { id: "b1", cat: "Flights", item: "LAX > LHR - Virgin Atlantic (Apr 8)", day: "Day 0", urgency: "done", booked: true },
+  { id: "b2", cat: "Flights", item: "National Express LHR > Birmingham (Apr 9)", day: "Day 1", urgency: "done", booked: true },
+  { id: "b3", cat: "Flights", item: "London > DC area (Apr 23) - use BWI>LAX credit for this", day: "Day 15", urgency: "red", booked: false },
+  { id: "b30", cat: "Flights", item: "Cancel/rebook BWI > LAX (Apr 26) - apply credit to UK>DC flight", day: "Day 18", urgency: "red", booked: false },
+  { id: "b31", cat: "Flights", item: "Train tickets: Brum > Edinburgh return (Apr 14-16)", day: "Days 6-8", urgency: "red", booked: false },
+
+  // FOOTBALL
+  { id: "b8", cat: "Football", item: "Brighton @ Tottenham (Apr 18)", day: "Day 10", urgency: "done", booked: true },
+
+  // ATTRACTIONS (book ahead)
+  { id: "b9", cat: "Attractions", item: "Cadbury World, Birmingham (if doing it)", day: "Days 2-4", urgency: "orange", booked: false },
+  { id: "b11", cat: "Attractions", item: "Old Trafford Stadium Tour, Manchester", day: "Day 13", urgency: "orange", booked: false },
+  { id: "b32", cat: "Attractions", item: "Edinburgh Castle", day: "Day 6", urgency: "orange", booked: false },
+  { id: "b12", cat: "Attractions", item: "Tower of London", day: "Day 9", urgency: "orange", booked: false },
+  { id: "b13", cat: "Attractions", item: "London Eye", day: "Day 9", urgency: "orange", booked: false },
+  { id: "b14", cat: "Attractions", item: "Westminster Abbey", day: "Day 10", urgency: "orange", booked: false },
+  { id: "b15", cat: "Attractions", item: "Christ Church College, Oxford", day: "Day 12", urgency: "green", booked: false },
+
+  // RESTAURANTS (book ahead)
+  { id: "b19", cat: "Restaurants", item: "Carters of Moseley, Birmingham (2 Michelin stars)", day: "Day 8", urgency: "red", booked: false },
+  { id: "b20", cat: "Restaurants", item: "The Art School Restaurant, Liverpool", day: "Day 5", urgency: "orange", booked: false },
+  { id: "b33", cat: "Restaurants", item: "The Witchery by the Castle, Edinburgh", day: "Day 6", urgency: "orange", booked: false },
+  { id: "b21", cat: "Restaurants", item: "Dishoom Covent Garden", day: "Day 10", urgency: "orange", booked: false },
+
+  // LODGING
+  { id: "b34", cat: "Lodging", item: "Edinburgh hotel - 2 nights (Tue Apr 14 - Thu Apr 16)", day: "Days 6-7", urgency: "red", booked: false },
+  { id: "b24", cat: "Lodging", item: "Westin London City (Fri Apr 17 - Sun Apr 19)", day: "Days 9-11", urgency: "orange", booked: false },
+
+  // SHOWS
+  { id: "b25", cat: "Shows", item: "West End show (Les Mis / Hamilton / Phantom)", day: "Day 11", urgency: "orange", booked: false },
+];
+
+// Load saved booking state
+function loadBookingState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('uk-trip-bookings') || '{}');
+    BOOKINGS.forEach(b => {
+      if (saved[b.id] !== undefined) b.booked = saved[b.id];
+    });
+  } catch(e) {}
+}
+function saveBookingState() {
+  const state = {};
+  BOOKINGS.forEach(b => state[b.id] = b.booked);
+  localStorage.setItem('uk-trip-bookings', JSON.stringify(state));
+  updateCounts();
+}
+function updateCounts() {
+  const booked = BOOKINGS.filter(b => b.booked).length;
+  const todo = BOOKINGS.filter(b => !b.booked).length;
+  document.getElementById('booked-count').textContent = booked;
+  document.getElementById('todo-count').textContent = todo;
+}
+
+// Render overview cards
+function renderOverview() {
+  const el = document.getElementById('overview-cards');
+  el.innerHTML = DAYS.map(d => `
+    <div class="day-card">
+      <div class="day-header" style="cursor:default">
+        <div class="day-num loc-${d.locClass}">Day ${d.day}</div>
+        <div class="day-info">
+          <div class="day-date">${d.date} <span style="color:var(--text2);font-weight:400">&mdash; ${d.location}</span></div>
+          <div class="day-location">${d.activities.map(a => a.name).slice(0, 3).join(' / ')}${d.activities.length > 3 ? ' ...' : ''}</div>
+        </div>
+        <div class="day-lodging">${d.lodging}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Render day-by-day
+function renderItinerary() {
+  const el = document.getElementById('day-cards');
+  el.innerHTML = DAYS.map(d => `
+    <div class="day-card" id="day-${d.day}">
+      <div class="day-header" onclick="toggleDay(${d.day})">
+        <div class="day-num loc-${d.locClass}">Day ${d.day}</div>
+        <div class="day-info">
+          <div class="day-date">${d.date} &mdash; ${d.location}</div>
+          <div class="day-location">${d.weekday}</div>
+        </div>
+        <div class="day-lodging">${d.lodging}</div>
+        <div class="day-toggle">&#9660;</div>
+      </div>
+      <div class="day-body">
+        ${d.activities.map(a => `
+          <div class="activity">
+            <div class="act-time">${a.time}</div>
+            <div class="act-icon">${a.icon}</div>
+            <div class="act-desc"><strong>${a.name}</strong>${a.note ? `<span class="note">${a.note}</span>` : ''}</div>
+            <div class="act-dur">${a.dur}</div>
+            <div class="act-cost">${a.cost}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleDay(n) {
+  document.getElementById('day-' + n).classList.toggle('open');
+}
+
+// Render bookings
+function renderBookings() {
+  const el = document.getElementById('booking-list');
+  const cats = [...new Set(BOOKINGS.map(b => b.cat))];
+  el.innerHTML = cats.map(cat => `
+    <div class="checklist-section">
+      <h3>${cat}</h3>
+      ${BOOKINGS.filter(b => b.cat === cat).map(b => `
+        <div class="check-item ${b.booked ? 'done' : ''}" id="check-${b.id}">
+          <input type="checkbox" ${b.booked ? 'checked' : ''} onchange="toggleBooking('${b.id}', this.checked)">
+          <div>${b.item}</div>
+          <div class="urgency ${b.booked ? 'done' : b.urgency}">${b.booked ? 'BOOKED' : b.urgency === 'red' ? 'BOOK NOW' : b.urgency === 'orange' ? 'BOOK SOON' : 'FLEXIBLE'}</div>
+          <div class="day-tag">${b.day}</div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+function toggleBooking(id, checked) {
+  const b = BOOKINGS.find(x => x.id === id);
+  b.booked = checked;
+  saveBookingState();
+  renderBookings();
+}
+
+// Packing list data
+const PACKING = [
+  { cat: "Clothes - Everyday", items: [
+    { id: "p1", name: "T-shirts / casual tops (5-6)", note: "Plan to do laundry at Rohan's and Dad's. Don't overpack" },
+    { id: "p2", name: "Long-sleeve shirts (2-3)", note: "Layering is key for UK April weather" },
+    { id: "p3", name: "Jeans / chinos (2 pairs)", note: "One darker pair doubles for dinners" },
+    { id: "p4", name: "Shorts (1 pair)", note: "For Miami. Won't need in UK" },
+    { id: "p5", name: "Hoodie / pullover (1)", note: "Everyday warmth layer" },
+    { id: "p6", name: "Light sweater or fleece (1)", note: "For layering under jacket" },
+    { id: "p7", name: "Underwear (7-8)", note: "Wash mid-trip" },
+    { id: "p8", name: "Socks (7-8 pairs)", note: "Include 1 pair hiking socks for Arthur's Seat" },
+    { id: "p9", name: "Sleepwear", note: "" },
+  ]},
+  { cat: "Clothes - Occasion", items: [
+    { id: "p10", name: "Wedding outfit (suit + dress shirt + tie + dress shoes)", note: "Sarah's wedding Sat Apr 25. This is the bulkiest item - wear it on the Maryland flight" },
+    { id: "p11", name: "Smart dinner outfit", note: "Carters of Moseley (2 Michelin stars), Witchery, Art School. Dark jeans + nice shirt + clean shoes works" },
+    { id: "p12", name: "Spurs shirt or scarf", note: "For Brighton @ Tottenham. Or buy at the Trafalgar Square store on the day" },
+    { id: "p13", name: "Work clothes for Miami (2-3 days)", note: "Mon-Wed work trip. Business casual" },
+  ]},
+  { cat: "Outerwear & Shoes", items: [
+    { id: "p14", name: "Waterproof jacket / rain shell", note: "NON-NEGOTIABLE. April in the UK = rain. Get one with a hood" },
+    { id: "p15", name: "Light packable down or puffer", note: "Edinburgh mornings and Arthur's Seat will be cold. Layers > bulk" },
+    { id: "p16", name: "Walking shoes / trainers", note: "You'll walk 10-15 miles/day some days. Comfort > style. Wear these on the plane" },
+    { id: "p17", name: "Dress shoes", note: "Wedding + Michelin dinners. Compact pair" },
+    { id: "p18", name: "Flip flops / slides", note: "For Rohan's house, hotels, Miami" },
+  ]},
+  { cat: "Tech & Gadgets", items: [
+    { id: "p19", name: "Phone + charger", note: "" },
+    { id: "p20", name: "Laptop + charger (if needed for work)", note: "Definitely need for Miami work trip" },
+    { id: "p21", name: "UK power adapter (Type G - 3 prong)", note: "BUY BEFORE YOU GO or at Heathrow. US plugs don't fit" },
+    { id: "p22", name: "Portable battery pack", note: "Long days out, lots of Google Maps + photos" },
+    { id: "p23", name: "Earbuds / headphones", note: "Flights, trains, museum audio guides" },
+    { id: "p24", name: "Camera (optional)", note: "Phone is fine. Edinburgh and Cotswolds are the most photogenic" },
+  ]},
+  { cat: "Travel Essentials", items: [
+    { id: "p25", name: "Passport", note: "CHECK EXPIRY. UK requires 6 months validity" },
+    { id: "p26", name: "Wallet + cards (check foreign transaction fees)", note: "UK is very contactless/card-friendly. Barely need cash" },
+    { id: "p27", name: "Small amount of GBP cash", note: "~\u00A350-100 for small vendors, tips, market stalls. Get at LAX or ATM on arrival" },
+    { id: "p28", name: "Travel insurance", note: "Worth it for a 20-day international trip" },
+    { id: "p29", name: "Day backpack / crossbody bag", note: "For daily sightseeing. Big enough for rain jacket + water + snacks" },
+    { id: "p30", name: "Luggage: carry-on + personal item (or 1 checked bag)", note: "You're moving between Brum, Edinburgh, London, Oxford. Lighter = better" },
+    { id: "p31", name: "Packing cubes", note: "Seriously. Moving between 4+ places, these keep you sane" },
+  ]},
+  { cat: "Toiletries & Health", items: [
+    { id: "p32", name: "Toiletry bag (travel sizes for carry-on)", note: "Can buy full sizes at Boots/Superdrug on arrival if checking bag" },
+    { id: "p33", name: "Sunscreen", note: "April sun can surprise you, especially hiking Arthur's Seat / Cotswolds" },
+    { id: "p34", name: "Any prescriptions / medications", note: "Bring enough for 20 days + buffer" },
+    { id: "p35", name: "Paracetamol / ibuprofen", note: "Jet lag headaches, walking soreness" },
+    { id: "p36", name: "Blister plasters / moleskin", note: "You will walk a LOT. Bring these preemptively" },
+  ]},
+  { cat: "Documents & Apps", items: [
+    { id: "p37", name: "Boarding passes (digital or print)", note: "Virgin Atlantic Apr 8. Download in advance" },
+    { id: "p38", name: "Hotel confirmations", note: "Edinburgh hotel, Westin London City" },
+    { id: "p39", name: "Spurs ticket", note: "Brighton @ Tottenham Apr 18. Screenshot or download to phone" },
+    { id: "p40", name: "Trainline app", note: "Best app for UK train tickets. Book in advance = much cheaper" },
+    { id: "p41", name: "Google Maps - download offline maps", note: "Download: Birmingham, Edinburgh, London, Oxford, Cotswolds" },
+    { id: "p42", name: "Citymapper app", note: "Best for London public transport navigation" },
+    { id: "p43", name: "Uber / Bolt app", note: "Both work in UK cities. Bolt is often cheaper" },
+    { id: "p44", name: "International phone plan / eSIM", note: "Check if your carrier covers UK. If not: Airalo eSIM or buy a UK SIM at Heathrow" },
+  ]},
+];
+
+function loadPackingState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('uk-trip-packing') || '{}');
+    PACKING.forEach(cat => cat.items.forEach(item => {
+      if (saved[item.id] !== undefined) item.packed = saved[item.id];
+    }));
+  } catch(e) {}
+}
+function savePackingState() {
+  const state = {};
+  PACKING.forEach(cat => cat.items.forEach(item => state[item.id] = !!item.packed));
+  localStorage.setItem('uk-trip-packing', JSON.stringify(state));
+}
+
+function renderPacking() {
+  const el = document.getElementById('packing-list');
+  el.innerHTML = PACKING.map(cat => {
+    const total = cat.items.length;
+    const done = cat.items.filter(i => i.packed).length;
+    return `
+    <div class="checklist-section">
+      <h3>${cat.cat} <span style="color:var(--text2);font-weight:400;font-size:13px">(${done}/${total})</span></h3>
+      ${cat.items.map(item => `
+        <div class="check-item ${item.packed ? 'done' : ''}" id="pack-${item.id}">
+          <input type="checkbox" ${item.packed ? 'checked' : ''} onchange="togglePacking('${item.id}', this.checked)">
+          <div>${item.name}${item.note ? `<span style="display:block;color:var(--text2);font-size:12px;margin-top:2px">${item.note}</span>` : ''}</div>
+          <div></div>
+          <div></div>
+        </div>
+      `).join('')}
+    </div>
+  `}).join('');
+}
+
+function togglePacking(id, checked) {
+  PACKING.forEach(cat => cat.items.forEach(item => {
+    if (item.id === id) item.packed = checked;
+  }));
+  savePackingState();
+  renderPacking();
+}
+
+// Nav
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.view).classList.add('active');
+  });
+});
+
+// Init
+loadBookingState();
+loadPackingState();
+renderOverview();
+renderItinerary();
+renderBookings();
+renderPacking();
+updateCounts();
+</script>
+</body>
+</html>
